@@ -25,6 +25,8 @@
 
 /datum/outfit/job/roguetown/druid/pre_equip(mob/living/carbon/human/H)
 	..()
+	H.faction += list("rats", "spiders", "wolfs")
+	H.ambushable = FALSE
 	belt = /obj/item/storage/belt/rogue/leather/rope
 	beltl = /obj/item/storage/belt/rogue/pouch/coins/poor
 	beltr = /obj/item/flashlight/flare/torch/lantern
@@ -32,10 +34,12 @@
 	head = /obj/item/clothing/head/roguetown/dendormask
 	neck = /obj/item/clothing/neck/roguetown/psicross/dendor
 	armor = /obj/item/clothing/suit/roguetown/shirt/robe/dendor
+	r_hand = /obj/item/rogueweapon/woodstaff
 	if(H.mind)
-		H.mind.adjust_skillrank(/datum/skill/misc/sewing, 1, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/combat/polearms, pick(1,2), TRUE)
 		H.mind.adjust_skillrank(/datum/skill/combat/unarmed, 3, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/combat/wrestling, 4, TRUE)
+		H.mind.adjust_skillrank(/datum/skill/misc/sewing, 1, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/misc/reading, 2, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/misc/treatment, 3, TRUE)
 		H.mind.adjust_skillrank(/datum/skill/magic/holy, 4, TRUE)
@@ -55,3 +59,7 @@
 	var/datum/devotion/C = new /datum/devotion(H, H.patron)
 	C.grant_spells(H)
 	H.verbs += list(/mob/living/carbon/human/proc/devotionreport, /mob/living/carbon/human/proc/clericpray)
+
+	if(!H.has_language(/datum/language/beast))
+		H.grant_language(/datum/language/beast)
+		to_chat(H, span_info("I can speak the primal language with ,b before my speech."))
